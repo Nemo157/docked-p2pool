@@ -1,10 +1,10 @@
 #!/bin/sh
 log() {
-  echo "\033[33m$*\033[0m"
+  printf "\033[33m$*\033[0m\n"
 }
 
 run() {
-  echo "\033[32m$*\033[0m"
+  printf "\033[32m$*\033[0m\n"
   "$@" || exit $?
 }
 
@@ -15,7 +15,12 @@ log "Ensuring local folders to share with VMs exist"
 if ! [[ -e vertcoin-pass ]]
 then
   log "Generating password for vertcoind"
-  password=$(head -c 1024 /dev/urandom | md5)
+  if [[ -x md5 ]]
+  then
+    password=$(head -c 1024 /dev/urandom | md5)
+  else
+    password=$(head -c 1024 /dev/urandom | md5sum | cut -c 1-32)
+  fi
   echo "rpcallowip=*" >> share/vertcoin-data/vertcoin.conf
   echo "rpcpassword=$password" >> share/vertcoin-data/vertcoin.conf
 fi
