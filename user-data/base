@@ -1,0 +1,25 @@
+#cloud-config
+
+coreos:
+  units:
+    - name: docker-tcp.socket
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Docker Socket for the API
+
+        [Socket]
+        ListenStream=4243
+        Service=docker.service
+        BindIPv6Only=both
+
+        [Install]
+        WantedBy=sockets.target
+    - name: coreos-cloudinit-extra-vagrant-user.path
+      command: start
+      runtime: yes
+      content: |
+        [Path]
+        PathExists=/var/lib/coreos-vagrant/vagrantfile-extra-user-data
+        Unit=user-cloudinit@var-lib-coreos\x2dvagrant-vagrantfile\x2dextra\x2duser\x2ddata.service

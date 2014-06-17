@@ -1,0 +1,20 @@
+FROM registry.local/baseimage:0.9.10
+MAINTAINER Nemo157 <ghostunderscore@gmail.com>
+
+ENV HOME /root
+
+RUN apt-get update
+RUN apt-get install -y python-zope.interface python-twisted python-twisted-web
+
+RUN mkdir /p2pool-n
+RUN curl --insecure --location https://github.com/donSchoe/p2pool-n/archive/master.tar.gz | tar -xzf - -C /p2pool-n --strip-components=1
+
+RUN cd /p2pool-n/py_modules/vertcoin_scrypt && python setup.py install
+
+RUN rm -rf /p2pool-n/web-static
+RUN mkdir /p2pool-n/web-static
+RUN curl --insecure --location https://github.com/hardcpp/P2PoolExtendedFrontEnd/archive/master.tar.gz | tar -xzf - -C /p2pool-n/web-static --strip-components=1
+
+EXPOSE 9174
+
+ENTRYPOINT ["/sbin/my_init", "--skip-startup-files", "--quiet", "--", "/p2pool-n/run_p2pool.py", "--net=vertcoin3"]

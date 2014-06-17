@@ -1,0 +1,31 @@
+#cloud-config
+
+coreos:
+  units:
+    - name: vertcoind.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Vertcoind Wallet
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        ExecStartPre=/usr/bin/bash -c '/usr/bin/docker pull registry.local/vertcoind:latest || true'
+        ExecStart=/usr/bin/bash -c '/usr/bin/docker start -a vertcoind || /usr/bin/docker run --rm --name vertcoind -p 5889:5889 -v /tmp/share/vertcoin-data:/root/.vertcoin registry.local/vertcoind -datadir=/root/.vertcoin'
+        ExecStop=/usr/bin/docker stop vertcoind
+
+    - name: p2pool-vtc3.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=P2Pool Node
+        After=docker.service vertcoind.service
+        Requires=docker.service vertcoind.service
+
+        [Service]
+        ExecStartPre=/usr/bin/bash -c '/usr/bin/docker pull registry.local/p2pool-vtc3:latest || true'
+        ExecStart=/usr/bin/bash -c '/usr/bin/docker start -a p2pool-vtc3 || /usr/bin/docker run --rm --name p2pool-vtc3 -p 9174:9174 -p 9348:9348 -v /tmp/share/vertcoin-data:/root/.vertcoin --link vertcoind:vertcoind -v /tmp/share/p2pool-data:/tmp/p2pool-data registry.local/p2pool-vtc3 --give-author 1 --fee 1 --address Vm2TaiQ2qfYAVh9jxJdABaUUwnxTasKJte --datadir /tmp/p2pool-data --bitcoind-address vertcoind'
+        ExecStop=/usr/bin/docker stop p2pool-vtc3

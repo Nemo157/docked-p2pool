@@ -1,0 +1,18 @@
+#cloud-config
+
+coreos:
+  units:
+    - name: docker-registry.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Local Docker Registry
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=/usr/bin/bash -c '/usr/bin/docker pull registry:0.7.0'
+        ExecStart=/usr/bin/bash -c '/usr/bin/docker start -a registry || /usr/bin/docker run --rm --name registry -p 80:5000 -v /tmp/registry:/tmp registry:0.7.0'
+        ExecStop=/usr/bin/docker stop registry
