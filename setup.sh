@@ -31,7 +31,7 @@ then
   run vagrant up registry
 fi
 
-while ! vagrant ssh registry -c 'docker ps | grep registry' >/dev/null 2>/dev/null
+while ! vagrant ssh registry -c 'systemctl status docker-registry.service' 2>/dev/null | grep 'active (running)' >/dev/null
 do
   log "Docker registry not started, can take a few minutes to download the docker image, will check again in 20 seconds..."
   sleep 20
