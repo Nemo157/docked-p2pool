@@ -25,7 +25,7 @@ then
   echo "rpcpassword=$password" >> share/vertcoin-data/vertcoin.conf
 fi
 
-if ! vagrant status registry | grep running >/dev/null
+if ! vagrant status registry | grep registry | grep running >/dev/null
 then
   log "Starting registry VM"
   run vagrant up registry
