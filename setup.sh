@@ -12,7 +12,7 @@ log "Ensuring local folders to share with VMs exist"
 [[ -d registry ]] || run mkdir -p registry
 [[ -d share/vertcoin-data ]] || run mkdir -p share/vertcoin-data
 
-if ! [[ -e vertcoin-pass ]]
+if ! [[ -e share/vertcoin-data/vertcoin.conf ]]
 then
   log "Generating password for vertcoind"
   if [[ -x md5 ]]
