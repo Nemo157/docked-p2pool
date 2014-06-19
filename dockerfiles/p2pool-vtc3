@@ -4,7 +4,7 @@ MAINTAINER Nemo157 <ghostunderscore@gmail.com>
 ENV HOME /root
 
 RUN apt-get update
-RUN apt-get install -y python-zope.interface python-twisted python-twisted-web
+RUN apt-get install -y build-essential python-zope.interface python-twisted python-twisted-web python-dev
 
 RUN mkdir /p2pool-n
 RUN curl --insecure --location https://github.com/donSchoe/p2pool-n/archive/master.tar.gz | tar -xzf - -C /p2pool-n --strip-components=1
