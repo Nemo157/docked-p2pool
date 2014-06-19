@@ -40,7 +40,8 @@ Vagrant.configure('2') do |config|
 
   config.vm.define :master, primary: true do |vm_config|
     set_host vm_config, :master
-    vm_config.vm.network :forwarded_port, guest: 9174, host: 9174 # For p2pool
+    vm_config.vm.network :forwarded_port, guest: 9174, host: 9174 # For p2pool stratum connection
+    vm_config.vm.network :forwarded_port, guest: 9348, host: 9348 # For p2pool p2p connection
     vm_config.vm.network :forwarded_port, guest: 5889, host: 5889 # For Vertcoin Blockchain Sync
     vm_config.vm.synced_folder 'share', '/tmp/share', type: 'nfs', mount_options: ['nolock,vers=3,udp']
     vm_config.vm.provision :file, source: 'user-data/master', destination: '/tmp/vagrantfile-extra-user-data', id: :extra_user_data, preserve_order: true

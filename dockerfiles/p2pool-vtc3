@@ -16,5 +16,6 @@ RUN mkdir /p2pool-n/web-static
 RUN curl --insecure --location https://github.com/hardcpp/P2PoolExtendedFrontEnd/archive/master.tar.gz | tar -xzf - -C /p2pool-n/web-static --strip-components=1
 
 EXPOSE 9174
+EXPOSE 9348
 
 ENTRYPOINT ["/sbin/my_init", "--skip-startup-files", "--quiet", "--", "/p2pool-n/run_p2pool.py", "--net=vertcoin3"]
